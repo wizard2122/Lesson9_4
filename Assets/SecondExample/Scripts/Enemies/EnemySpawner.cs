@@ -1,45 +1,54 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Zenject;
 
-public class EnemySpawner : MonoBehaviour
+namespace SecondExample.Scripts.Enemies
 {
-    [SerializeField] private float _spawnCooldown;
-
-    [SerializeField] private List<Transform> _spawnPoints;
-
-    private EnemyFactory _enemyFactory;
-
-    private Coroutine _spawn;
-
-    [Inject]
-    private void Construct(EnemyFactory enemyFactory)
+    public class EnemySpawner
     {
-        _enemyFactory = enemyFactory;
-    }
-
-    public void StartWork()
-    {
-        StopWork();
-
-        _spawn = StartCoroutine(Spawn());
-    }
-
-    public void StopWork()
-    {
-        if (_spawn != null)
-            StopCoroutine(_spawn);
-    }
-
-    private IEnumerator Spawn()
-    {
-        while (true)
+        private const string ConfigPath = "EnemySpawner/EnemySpawnerConfig";
+    
+        private readonly CoroutineHandler _coroutineHandler;
+        private readonly EnemyFactory _enemyFactory;
+        private readonly SpawnPointHandler _spawnPointHandler;
+    
+        private EnemySpawnerConfig _spawnerConfig;
+        private Coroutine _spawn;
+    
+        public EnemySpawner(EnemyFactory enemyFactory, CoroutineHandler coroutineHandler, SpawnPointHandler spawnPointHandler)
         {
-            Enemy enemy = _enemyFactory.Get((EnemyType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(EnemyType)).Length));
-            enemy.MoveTo(_spawnPoints[UnityEngine.Random.Range(0, _spawnPoints.Count)].position);
-            yield return new WaitForSeconds(_spawnCooldown);
+            _enemyFactory = enemyFactory;
+            _coroutineHandler = coroutineHandler;
+            _spawnPointHandler = spawnPointHandler;
+            Load();
+        }
+
+        public void StartWork()
+        {
+            StopWork();
+
+            _spawn = _coroutineHandler.StartCoroutine(Spawn());
+        }
+
+        private void StopWork()
+        {
+            if (_spawn != null) 
+                _coroutineHandler.StopCoroutine(_spawn);
+        }
+
+        private IEnumerator Spawn()
+        {
+            while (true)
+            {
+                Enemy enemy = _enemyFactory.Get((EnemyType)UnityEngine.Random.Range(0, Enum.GetValues(typeof(EnemyType)).Length));
+                enemy.MoveTo(_spawnPointHandler.GetRandomPoint());
+                yield return new WaitForSeconds(_spawnerConfig.SpawnCooldown);
+            }
+        }
+    
+        private void Load()
+        {
+            _spawnerConfig = Resources.Load<EnemySpawnerConfig>(ConfigPath);
         }
     }
 }
