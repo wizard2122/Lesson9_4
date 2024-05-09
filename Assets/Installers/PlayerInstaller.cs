@@ -1,27 +1,30 @@
 using UnityEngine;
 using Zenject;
 
-public class PlayerInstaller : MonoInstaller
+namespace Installers
 {
-    [SerializeField] private Transform _playerSpawnPoint;
-    [SerializeField] private Player _playerPrefab;
-
-    [SerializeField] private PlayerStatsConfig _playerStatsConfig;
-
-    public override void InstallBindings()
+    public class PlayerInstaller : MonoInstaller
     {
-        BindConfig();
-        BindInstance();
-    }
+        [SerializeField] private Transform _playerSpawnPoint;
+        [SerializeField] private Player _playerPrefab;
 
-    private void BindInstance()
-    {
-        Player player = Container.InstantiatePrefabForComponent<Player>(_playerPrefab, _playerSpawnPoint.position, Quaternion.identity, null);
-        Container.BindInterfacesAndSelfTo<Player>().FromInstance(player).AsSingle();
-    }
+        [SerializeField] private PlayerStatsConfig _playerStatsConfig;
 
-    private void BindConfig()
-    {
-        Container.Bind<PlayerStatsConfig>().FromInstance(_playerStatsConfig).AsSingle();
+        public override void InstallBindings()
+        {
+            BindConfig();
+            BindInstance();
+        }
+
+        private void BindInstance()
+        {
+            Player player = Container.InstantiatePrefabForComponent<Player>(_playerPrefab, _playerSpawnPoint.position, Quaternion.identity, null);
+            Container.BindInterfacesAndSelfTo<Player>().FromInstance(player).AsSingle();
+        }
+
+        private void BindConfig()
+        {
+            Container.Bind<PlayerStatsConfig>().FromInstance(_playerStatsConfig).AsSingle();
+        }
     }
 }

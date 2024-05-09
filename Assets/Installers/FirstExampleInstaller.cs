@@ -1,9 +1,12 @@
 using Zenject;
 
-public class FirstExampleInstaller : MonoInstaller
+namespace Installers
 {
-    public override void InstallBindings()
+    public class FirstExampleInstaller : MonoInstaller
     {
-        Container.BindInterfacesAndSelfTo<MovementHandler>().AsSingle();
+        public override void InstallBindings()
+        {
+            Container.BindInterfacesAndSelfTo<MovementHandler>().AsSingle();
+        }
     }
 }

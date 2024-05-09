@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public enum EnemyType
+namespace SecondExample.Scripts.Enemies
 {
-   Small,
-   Medium,
-   Large,
+   public enum EnemyType
+   {
+      Small,
+      Medium,
+      Large,
+   }
 }

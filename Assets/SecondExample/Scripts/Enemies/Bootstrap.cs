@@ -1,11 +1,15 @@
+using SecondExample.Scripts.Enemies;
 using UnityEngine;
+using Zenject;
 
 public class Bootstrap : MonoBehaviour
 {
-    [SerializeField] private EnemySpawner _spawner;
+    private EnemySpawner _spawner;
 
-    private void Awake()
+    [Inject]
+    private void Construct(EnemySpawner spawner)
     {
+        _spawner = spawner;
         _spawner.StartWork();
     }
 }
