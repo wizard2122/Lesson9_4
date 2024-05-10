@@ -7,12 +7,14 @@ public class GameplayHUD : MonoBehaviour
     [SerializeField] private Button _mainMenuButton;
 
     private SceneLoadMediator _sceneLoader;
+    private Wallet _wallet;
 
     [Inject]
-    private void Construct(SceneLoadMediator sceneLoader, LevelLoadingData levelLoadingData)
+    private void Construct(SceneLoadMediator sceneLoader, LevelLoadingData levelLoadingData, Wallet wallet)
     {
         _sceneLoader = sceneLoader;
         Debug.Log($"Level: {levelLoadingData.Level}");
+        _wallet = wallet;
     }
 
     private void OnEnable()
@@ -22,4 +24,14 @@ public class GameplayHUD : MonoBehaviour
         => _mainMenuButton.onClick.RemoveListener(OnMainMenuClick);
 
     private void OnMainMenuClick() => _sceneLoader.GoToMainMenu();
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+            _wallet.Add(10);
+
+        if (Input.GetKeyDown(KeyCode.Space))
+            if (_wallet.IsEnough(10))
+                _wallet.Spend(10);
+    }
 }

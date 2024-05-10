@@ -1,12 +1,27 @@
+using System;
 using UnityEngine;
 using Zenject;
 
 public class GlobalInstaller : MonoInstaller
 {
+    private const string CoroutinePerformerPath = "CoroutinePerformer";
+
     public override void InstallBindings()
     {
         BindLoader();
         BindInput();
+        BindResources();
+        BindCouroutinePerformer();
+    }
+
+    private void BindCouroutinePerformer()
+    {
+        Container.Bind<ICoroutinePerformer>().To<CoroutinePerformer>().FromComponentInNewPrefabResource(CoroutinePerformerPath).AsSingle();
+    }
+
+    private void BindResources()
+    {
+        Container.BindInstance(new Wallet(1000));
     }
 
     private void BindLoader()

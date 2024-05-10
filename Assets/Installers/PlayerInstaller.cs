@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Zenject;
 
@@ -18,6 +19,10 @@ public class PlayerInstaller : MonoInstaller
     {
         Player player = Container.InstantiatePrefabForComponent<Player>(_playerPrefab, _playerSpawnPoint.position, Quaternion.identity, null);
         Container.BindInterfacesAndSelfTo<Player>().FromInstance(player).AsSingle();
+
+        //Container.BindInterfacesAndSelfTo<Player>().FromComponentInNewPrefabResource(PlayerPrefabPath).AsSingle().NonLazy();
+
+        //Container.BindInterfacesAndSelfTo<Player>().FromFactory<Player, PlayerFactory>().AsSingle();
     }
 
     private void BindConfig()

@@ -13,9 +13,9 @@ public class EnemyFactory
 
     private EnemyConfig _small, _medium, _large;
 
-    private DiContainer _diContainer;
+    private IInstantiator _diContainer;
 
-    public EnemyFactory(DiContainer diContainer)
+    public EnemyFactory(IInstantiator diContainer)
     {
         _diContainer = diContainer;
         Load();
